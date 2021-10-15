@@ -3,19 +3,36 @@ import os
 
 class reg_file:
     def __init__(self):
-        self.path_toSelf = "H:/"  # when we load this on the server this will be fixed
+        #self.path_toSelf = "H:/TestAutoRepo/"  # when we load this on the server this will be fixed
         self.username = "MarcusGenFus"
         self.access_token = "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"
         #self.remote = f"https://{self.username}:{self.access_token}@github.com/GeneralFusion/PIStatusWebApp.git"
         self.remote = f"https://{self.username}:{self.access_token}@https://github.com/MarcusGenFus/TestAutoRepo.git"
-        self.repo = self.get_updated_repo()
+        self.repoName = "TestAutoRepo"
         self.branchN = ""
         self.changes_made = []
         self.file = ""
+        self.repo = self.get_updated_repo()
 
     # it should be possible to use the function below as a reset to any changes made in the session
     def get_updated_repo(self):
-        return Repo.clone_from(self.remote, self.path_toSelf)
+        tmp_dir = "H:/"
+        repo_dir = os.path.join(tmp_dir, self.repoName)
+        print(repo_dir)
+        if os.path.isdir(repo_dir):
+            repo = Repo(repo_dir)
+            try:
+                repo.git.pull()
+            except:
+                # This usually means the branch we're on is gone, so just fetch
+                repo.git.fetch()
+        else:
+            os.makedirs(repo_dir)
+            repo = Repo.clone_from(self.remote, repo_dir)
+        assert not repo.bare
+        #return Repo.
+        #return Repo.clone_from(self.remote, self.path_toSelf)
+        return repo
 
     def read_last_branch(self):
         curr_dir = os.getcwd() # this will have to be swapped with a static place later

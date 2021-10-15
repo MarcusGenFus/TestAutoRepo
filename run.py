@@ -8,7 +8,7 @@ def main():
     if temp == False:
         re.mount_branch("main")
     re.repo_file_checkout("testfile1.txt")
-    with open("H:/TestAutoRep/files/testfile1.txt", 'a') as file:
+    with open("H:/TestAutoRepo/files/testfile1.txt", "a") as file:
         file.write("new message")
         file.close()
     re.update_config()
